@@ -9,6 +9,12 @@ import gradio as gr
 
 load_dotenv(override=True)
 
+ADESSO_BASE_URL = os.getenv('ADESSO_BASE_URL')
+vultr_base_url = os.getenv('VULTR_BASE_URL')
+adesso_sovereign_ai_hub_key = os.getenv('ADESSO_SOVEREIGN_AI_HUB_KEY')
+adesso_api_key = os.getenv('ADESSO_API_KEY')
+vultr_api_key = os.getenv('VULTR_API_KEY')
+
 def push(text):
     requests.post(
         "https://api.pushover.net/1/messages.json",
@@ -76,8 +82,8 @@ tools = [{"type": "function", "function": record_user_details_json},
 class Me:
 
     def __init__(self):
-        self.openai = OpenAI()
-        self.name = "Ed Donner"
+        self.adesso = OpenAI(base_url="https://adesso-ai-hub.3asabc.de/v1", api_key=adesso_sovereign_ai_hub_key)
+        self.name = "Manpreet Singhathia"
         reader = PdfReader("me/linkedin.pdf")
         self.linkedin = ""
         for page in reader.pages:
@@ -116,7 +122,7 @@ If the user is engaging in discussion, try to steer them towards getting in touc
         messages = [{"role": "system", "content": self.system_prompt()}] + history + [{"role": "user", "content": message}]
         done = False
         while not done:
-            response = self.openai.chat.completions.create(model="gpt-4o-mini", messages=messages, tools=tools)
+            response = self.adesso.chat.completions.create(model="qwen-3.6-35b-sovereign", messages=messages, tools=tools)
             if response.choices[0].finish_reason=="tool_calls":
                 message = response.choices[0].message
                 tool_calls = message.tool_calls
