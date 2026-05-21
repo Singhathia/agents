@@ -7,6 +7,59 @@ from .tools.push_tool import PushNotificationTool
 from crewai.memory import LongTermMemory, ShortTermMemory, EntityMemory
 from crewai.memory.storage.rag_storage import RAGStorage
 from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
+import os
+from dotenv import load_dotenv
+from crewai import LLM
+
+load_dotenv()
+
+adesso_llm = LLM(
+    model="openai/qwen-3.6-35b-sovereign",
+    base_url=os.getenv("ADESSO_BASE_URL"),
+    api_key=os.getenv("ADESSO_SOVEREIGN_AI_HUB_KEY"),
+)
+
+adesso_embedder = {
+    "provider": "openai",
+    "config": {
+        "model": "qwen-3-vl-embedding-2b-sovereign",
+        "api_key": os.getenv("ADESSO_SOVEREIGN_AI_HUB_KEY"),
+        "api_base": os.getenv("ADESSO_BASE_URL"),
+    },
+}
+
+
+adesso_premium_llm = LLM(
+    model="openai/claude-haiku-4-5",
+    base_url=os.getenv("ADESSO_BASE_URL"),
+    api_key=os.getenv("ADESSO_API_KEY"),
+)
+
+vultr_llm = LLM(
+    model="openai/nvidia/DeepSeek-V3.2-NVFP4",
+    base_url=os.getenv("VULTR_BASE_URL"),
+    api_key=os.getenv("VULTR_API_KEY"),
+)
+
+vultr_premium_llm = LLM(
+    model="openai/zai-org/GLM-5.1-FP8",
+    base_url=os.getenv("VULTR_BASE_URL"),
+    api_key=os.getenv("VULTR_API_KEY"),
+)
+
+cerebras_llm = LLM(
+    model="openai/zai-glm-4.7",
+    base_url=os.getenv("CEREBRAS_BASE_URL"),
+    api_key=os.getenv("CEREBRAS_API_KEY"),
+)
+
+groq_llm = LLM(
+    model="openai/llama-3.3-70b-versatile",
+    base_url=os.getenv("GROQ_BASE_URL"),
+    api_key=os.getenv("GROQ_API_KEY"),
+)
+
+
 
 class TrendingCompany(BaseModel):
     """ A company that is in the news and attracting attention """
@@ -39,17 +92,17 @@ class StockPicker():
 
     @agent
     def trending_company_finder(self) -> Agent:
-        return Agent(config=self.agents_config['trending_company_finder'],
+        return Agent(config=self.agents_config['trending_company_finder'],llm=vultr_llm,
                      tools=[SerperDevTool()], memory=True)
     
     @agent
     def financial_researcher(self) -> Agent:
-        return Agent(config=self.agents_config['financial_researcher'], 
+        return Agent(config=self.agents_config['financial_researcher'],llm=vultr_llm, 
                      tools=[SerperDevTool()])
 
     @agent
     def stock_picker(self) -> Agent:
-        return Agent(config=self.agents_config['stock_picker'], 
+        return Agent(config=self.agents_config['stock_picker'],llm=adesso_llm, 
                      tools=[PushNotificationTool()], memory=True)
     
     @task
@@ -80,7 +133,7 @@ class StockPicker():
         """Creates the StockPicker crew"""
 
         manager = Agent(
-            config=self.agents_config['manager'],
+            config=self.agents_config['manager'],llm=vultr_premium_llm,
             allow_delegation=True
         )
             
@@ -91,6 +144,7 @@ class StockPicker():
             verbose=True,
             manager_agent=manager,
             memory=True,
+            # embedder=adesso_embedder,
             # Long-term memory for persistent storage across sessions
             long_term_memory = LongTermMemory(
                 storage=LTMSQLiteStorage(
@@ -100,24 +154,14 @@ class StockPicker():
             # Short-term memory for current context using RAG
             short_term_memory = ShortTermMemory(
                 storage = RAGStorage(
-                        embedder_config={
-                            "provider": "openai",
-                            "config": {
-                                "model": 'text-embedding-3-small'
-                            }
-                        },
+                        embedder_config=adesso_embedder,
                         type="short_term",
                         path="./memory/"
                     )
                 ),            # Entity memory for tracking key information about entities
             entity_memory = EntityMemory(
                 storage=RAGStorage(
-                    embedder_config={
-                        "provider": "openai",
-                        "config": {
-                            "model": 'text-embedding-3-small'
-                        }
-                    },
+                    embedder_config=adesso_embedder,
                     type="short_term",
                     path="./memory/"
                 )

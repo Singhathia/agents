@@ -1,0 +1,352 @@
+design_task:
+  description: >
+    Create a detailed but compact backend engineering design for the Indian stock market
+    trading simulation platform.
+
+    Use this project summary:
+    {project_summary}
+
+    Use these backend requirements:
+    {backend_requirements}
+
+    The design must include:
+    - overall architecture
+    - data structures
+    - dataclasses or helper structures if useful
+    - exact public method names and signatures
+    - validation rules
+    - fixed Indian stock price provider
+    - transaction model
+    - holdings model
+    - cash balance logic
+    - trading charge calculation approach
+    - buy/sell logic
+    - average price logic
+    - realized P&L logic
+    - unrealized P&L logic
+    - portfolio value calculation
+    - report method structures
+    - expected return shapes for frontend-friendly reports
+    - testing strategy
+
+    IMPORTANT:
+    Output only markdown.
+    Do not write implementation code.
+  expected_output: >
+    A compact markdown technical design that a backend engineer can directly implement.
+  agent: engineering_lead
+  output_file: output/{module_name}_design.md
+
+
+code_task:
+  description: >
+    Implement the backend Python module based on the engineering design.
+
+    Use this project summary:
+    {project_summary}
+
+    Use these backend requirements:
+    {backend_requirements}
+
+    Implementation rules:
+    - Generate one complete file named {module_file}.
+    - The file must expose class {class_name}.
+    - The module must be importable with: from {module_name} import {class_name}
+    - Use only Python standard library.
+    - Do not use pandas, numpy, internet access, external APIs, databases, or paid services.
+    - Keep the file compact and complete.
+    - Avoid overengineering.
+    - Avoid long decorative comments.
+    - Avoid demo code under if __name__ == "__main__".
+    - All public API methods listed in the requirements must exist.
+    - All report methods must return plain dictionaries or lists of dictionaries.
+    - The final file must be syntactically complete.
+    - The final file must pass: python -m py_compile {module_file}
+
+    IMPORTANT:
+    Output ONLY raw Python code.
+    Do not include markdown.
+    Do not include code fences.
+    Do not include explanations.
+  expected_output: >
+    A complete, valid, compact, self-contained Python backend module implementing the
+    Indian stock market trading simulation account system.
+  agent: backend_engineer
+  context:
+    - design_task
+  output_file: output/{module_file}
+
+
+backend_validation_task:
+  description: >
+    Validate output/{module_file} immediately after backend generation.
+
+    Use these validation requirements:
+    {validation_requirements}
+
+    Use these backend requirements:
+    {backend_requirements}
+
+    Validation steps:
+    - Inspect the generated backend code.
+    - Use code execution if available.
+    - Check that output/{module_file} is syntactically complete.
+    - Check that it would pass: python -m py_compile output/{module_file}
+    - Check that this import works from the output directory:
+      from {module_name} import {class_name}
+    - Check that class {class_name} exposes all required public API methods.
+    - Check that there is no incorrect import like from {module_name}.py import {class_name}.
+
+    If the file passes validation:
+    - Output the complete original output/{module_file} content unchanged.
+
+    If the file fails validation:
+    - Rewrite the entire output/{module_file} file.
+    - Keep it compact.
+    - Fully satisfy the backend requirements.
+    - Do not output a patch.
+    - Do not output a report.
+
+    IMPORTANT:
+    Output ONLY the complete raw Python code for {module_file}.
+    Do not include markdown.
+    Do not include code fences.
+    Do not include explanations.
+  expected_output: >
+    The complete validated or corrected raw Python code for output/{module_file}.
+  agent: validation_engineer
+  context:
+    - code_task
+  output_file: output/{module_file}
+
+
+frontend_task:
+  description: >
+    Build a compact polished Gradio UI in a file named app.py.
+
+    Use this project summary:
+    {project_summary}
+
+    Use these frontend requirements:
+    {frontend_requirements}
+
+    Use the validated backend from the previous task.
+
+    The app must import the backend class using:
+    from {module_name} import {class_name}
+
+    Required behavior:
+    - Use one demo account instance.
+    - Show sample Indian symbols and fixed prices.
+    - Support account setup.
+    - Support deposits.
+    - Support withdrawals.
+    - Support buy orders.
+    - Support sell orders.
+    - Show portfolio dashboard metrics.
+    - Show holdings table.
+    - Show transaction history table.
+    - Show profit/loss summary.
+    - Include exactly two lightweight matplotlib charts.
+    - Avoid pandas and Plotly.
+    - Use one shared refresh_dashboard() helper.
+    - Keep callbacks compact.
+    - Keep app.py syntactically complete.
+    - End with the launch guard.
+
+    Completion rules:
+    - Do not stop inside a list, dictionary, callback, function, with-block, or component definition.
+    - Every .click() call must have complete inputs and outputs.
+    - All brackets, parentheses, strings, lists, and dictionaries must be closed.
+    - The app must pass: python -m py_compile app.py
+
+    IMPORTANT:
+    Output ONLY raw Python code.
+    Do not include markdown.
+    Do not include code fences.
+    Do not include explanations.
+  expected_output: >
+    A complete compact Gradio app.py that imports the validated backend from {module_name},
+    demonstrates the portfolio simulator, includes exactly two lightweight charts,
+    and passes python -m py_compile app.py.
+  agent: frontend_engineer
+  context:
+    - backend_validation_task
+  output_file: output/app.py
+
+
+frontend_validation_task:
+  description: >
+    Validate output/app.py immediately after frontend generation.
+
+    Use these validation requirements:
+    {validation_requirements}
+
+    Use these frontend requirements:
+    {frontend_requirements}
+
+    Validation steps:
+    - Inspect the generated app.py code.
+    - Use code execution if available.
+    - Check that output/app.py is syntactically complete.
+    - Check that it would pass: python -m py_compile output/app.py
+    - Check that it imports the backend using:
+      from {module_name} import {class_name}
+    - Check that it does not import from {module_name}.py.
+    - Check that it avoids pandas and Plotly.
+    - Check that it includes exactly two lightweight chart helpers or chart outputs.
+    - Check that it ends with:
+
+      if __name__ == "__main__":
+          demo.launch()
+
+    If app.py passes validation:
+    - Output the complete original app.py content unchanged.
+
+    If app.py fails validation:
+    - Rewrite the entire app.py file.
+    - Keep it compact.
+    - Preserve exactly two lightweight matplotlib charts.
+    - Use the validated backend public API.
+    - Do not output a patch.
+    - Do not output a report.
+
+    IMPORTANT:
+    Output ONLY the complete raw Python code for app.py.
+    Do not include markdown.
+    Do not include code fences.
+    Do not include explanations.
+  expected_output: >
+    The complete validated or corrected raw Python code for output/app.py.
+  agent: validation_engineer
+  context:
+    - frontend_task
+    - backend_validation_task
+  output_file: output/app.py
+
+
+test_task:
+  description: >
+    Write deterministic unit tests for the validated backend module {module_file}.
+
+    Use this project summary:
+    {project_summary}
+
+    Use these test requirements:
+    {test_requirements}
+
+    Use the validated backend from the previous tasks.
+
+    The test file must be named test_{module_name}.py.
+
+    The test file must import the backend using:
+    from {module_name} import {class_name}
+
+    Test rules:
+    - Prefer unittest from the standard library.
+    - Do not require internet access.
+    - Do not require real market prices.
+    - Do not require external services.
+    - Do not depend on exact current timestamp values.
+    - It is okay to assert that timestamp exists and is non-empty.
+    - Keep tests deterministic.
+    - Keep tests compact but meaningful.
+    - The test file must pass: python -m py_compile test_{module_name}.py
+
+    IMPORTANT:
+    Output ONLY raw Python code.
+    Do not include markdown.
+    Do not include code fences.
+    Do not include explanations.
+  expected_output: >
+    A complete Python test file named test_{module_name}.py that thoroughly tests the
+    validated backend module.
+  agent: test_engineer
+  context:
+    - backend_validation_task
+  output_file: output/test_{module_name}.py
+
+
+test_validation_task:
+  description: >
+    Validate output/test_{module_name}.py immediately after test generation.
+
+    Use these validation requirements:
+    {validation_requirements}
+
+    Use these test requirements:
+    {test_requirements}
+
+    Validation steps:
+    - Inspect the generated test file.
+    - Use code execution if available.
+    - Check that output/test_{module_name}.py is syntactically complete.
+    - Check that it would pass: python -m py_compile output/test_{module_name}.py
+    - Check that it imports the backend using:
+      from {module_name} import {class_name}
+    - Check that it does not import from {module_name}.py.
+    - Check that tests do not depend on exact timestamp values.
+    - Check that tests are deterministic.
+    - If possible, run the tests from the output directory.
+
+    If the test file passes validation:
+    - Output the complete original test file content unchanged.
+
+    If the test file fails validation:
+    - Rewrite the entire test_{module_name}.py file.
+    - Keep it compact and deterministic.
+    - Use unittest unless there is a strong reason not to.
+    - Do not output a patch.
+    - Do not output a report.
+
+    IMPORTANT:
+    Output ONLY the complete raw Python code for test_{module_name}.py.
+    Do not include markdown.
+    Do not include code fences.
+    Do not include explanations.
+  expected_output: >
+    The complete validated or corrected raw Python code for output/test_{module_name}.py.
+  agent: validation_engineer
+  context:
+    - test_task
+    - backend_validation_task
+  output_file: output/test_{module_name}.py
+
+
+final_validation_task:
+  description: >
+    Perform final release validation for the generated project.
+
+    Use these validation requirements:
+    {validation_requirements}
+
+    Validate these files:
+    - output/{module_file}
+    - output/app.py
+    - output/test_{module_name}.py
+
+    Validation checks:
+    - output/{module_file} should compile.
+    - output/app.py should compile.
+    - output/test_{module_name}.py should compile.
+    - from {module_name} import {class_name} should work from the output directory.
+    - app.py should import from {module_name}, not {module_name}.py.
+    - app.py should end with the launch guard.
+    - app.py should avoid pandas and Plotly.
+    - app.py should include exactly two lightweight charts.
+    - test file should import from {module_name}.
+    - tests should be deterministic.
+    - If possible, run the tests from the output directory.
+
+    IMPORTANT:
+    This task should output a markdown validation report.
+    Do not rewrite Python files in this task.
+  expected_output: >
+    A concise markdown validation report summarizing whether all generated files compile,
+    whether imports are correct, whether tests pass if run, and any remaining issues.
+  agent: validation_engineer
+  context:
+    - backend_validation_task
+    - frontend_validation_task
+    - test_validation_task
+  output_file: output/validation_report.md
