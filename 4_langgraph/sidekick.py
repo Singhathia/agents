@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
@@ -48,10 +49,52 @@ class Sidekick:
     async def setup(self):
         self.tools, self.browser, self.playwright = await playwright_tools()
         self.tools += await other_tools()
-        worker_llm = ChatOpenAI(model="gpt-4o-mini")
-        self.worker_llm_with_tools = worker_llm.bind_tools(self.tools)
-        evaluator_llm = ChatOpenAI(model="gpt-4o-mini")
-        self.evaluator_llm_with_output = evaluator_llm.with_structured_output(EvaluatorOutput)
+        # worker_llm = ChatOpenAI(model="gpt-4o-mini")
+        # Initialize each model with its specific provider configuration
+        adesso_llm = ChatOpenAI(
+            model="qwen-3.5-122b-sovereign",
+            base_url=os.getenv("ADESSO_BASE_URL"),
+            api_key=os.getenv("ADESSO_SOVEREIGN_AI_HUB_KEY"),
+        )
+
+        adesso_lite_llm = ChatOpenAI(
+            model="qwen-3.6-35b-sovereign",
+            base_url=os.getenv("ADESSO_BASE_URL"),
+            api_key=os.getenv("ADESSO_SOVEREIGN_AI_HUB_KEY"),
+        )
+
+        adesso_premium_llm = ChatOpenAI(
+            model="claude-haiku-4-5",
+            base_url=os.getenv("ADESSO_BASE_URL"),
+            api_key=os.getenv("ADESSO_API_KEY"),
+        )
+
+        vultr_llm = ChatOpenAI(
+            model="nvidia/DeepSeek-V3.2-NVFP4",
+            base_url=os.getenv("VULTR_BASE_URL"),
+            api_key=os.getenv("VULTR_API_KEY"),
+        )
+
+        vultr_premium_llm = ChatOpenAI(
+            model="zai-org/GLM-5.1-FP8",
+            base_url=os.getenv("VULTR_BASE_URL"),
+            api_key=os.getenv("VULTR_API_KEY"),
+        )
+
+        cerebras_llm = ChatOpenAI(
+            model="llama3.1-8b",
+            base_url=os.getenv("CEREBRAS_BASE_URL"),
+            api_key=os.getenv("CEREBRAS_API_KEY"),
+        )
+
+        groq_llm = ChatOpenAI(
+            model="llama-3.1-8b-instant",
+            base_url=os.getenv("GROQ_BASE_URL"),
+            api_key=os.getenv("GROQ_API_KEY"),
+        )
+        self.worker_llm_with_tools = adesso_llm.bind_tools(self.tools)
+        # evaluator_llm = ChatOpenAI(model="gpt-4o-mini")
+        self.evaluator_llm_with_output = vultr_premium_llm.with_structured_output(EvaluatorOutput)
         await self.build_graph()
 
     def worker(self, state: State) -> Dict[str, Any]:

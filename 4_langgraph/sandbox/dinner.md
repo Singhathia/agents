@@ -1,24 +1,116 @@
-# Dinner Report: Le Bernardin
+# Le Veau d'Or - French Restaurant Report
 
-## Restaurant Overview
-- **Name**: Le Bernardin
-- **Address**: 155 W 51st St, New York, NY 10019
-- **Phone**: (212) 554-1515
-- **Website**: [le-bernardin.com](http://le-bernardin.com)
+## Restaurant Name
+**Le Veau d'Or**
 
-## Cuisine
-Le Bernardin specializes in refined seafood dishes, crafted with the utmost respect for the ingredients. The menu includes a variety of seafood preparations, with an emphasis on freshness and simplicity.
+## Address
+129 E 60th St, New York, NY 10022
 
-## Menu Highlights
-- **Tuna Tartare**: Diced raw tuna, served with toasted sesame and avocado.
-- **Wild Salmon**: Lightly cooked, served with a warm ginger-soy emulsion and bok choy.
-- **Poached Lobster**: Accompanied by truffle butter and a delicate sauce.
-- **Chocolate Soufflé**: A classic dessert, rich and airy.
+## Phone
+646-386-7608
 
-## Ambiance
-The atmosphere at Le Bernardin is elegant and serene, characterized by minimalist decor and a focus on the dining experience.
+## Overview
+Established in 1937, Le Veau d'Or is a historic French restaurant on the Upper East Side that reopened under the leadership of Chefs Riad Nasr and Lee Hanson (known for Frenchette and Le Rock). The restaurant pays homage to its nearly 100-year history while offering an elevated neo-bistro experience.
 
-## Summary of Reviews
-Le Bernardin has consistently received rave reviews for its exceptional cuisine and impeccable service. It is a three-Michelin star restaurant, recognized as one of the best seafood restaurants not only in New York but also in the world. Diners emphasize the harmonious flavors and the artistry of the dishes, making it a top choice for special occasions.
+## Menu
 
-**In conclusion**, Le Bernardin represents the pinnacle of fine dining, offering diners an unforgettable experience centered around seafood excellence.
+### Dinner Menu ($135 per person)
+- **Starters:**
+  - Pommes Souflées
+  - Caviar Rouge a la Crème
+  - Assiette Bouchon
+  - Pâté en Croûte
+  - Salade de Betteraves
+  - Petite Omelette
+  - Les Escargots Provençal
+  - Oysters ou Little Necks
+  - Chipolatas
+  - Sabodet Sausage aux Lentilles
+  - Tripes à La Mode
+  - Goujonettes of Fluke Sauce Tartar
+  - Artichokes à la Grècque
+  - Mackerel au Vin Blanc
+  - Tête De Veau Ravigote
+  - Potage de Légumes
+  - Oeuf en Gelée
+  - Frogs' Legs Persillade
+
+- **Main Courses:**
+  - Onglet Frites
+  - Hanger Steak Béarnaise ou Au Poivre
+  - Homard Macédoine, Lobster Salade Aux Fines Herbes
+  - Poulet à l'Estragon
+  - Duck Magret Aux Cerises
+  - Chou Farcis (Stuffed Cabbage, Sauce Tomate)
+  - Les Délices "Veau d'Or" Sauce Moutarde
+  - Gigot of Lamb "Coco" Beans
+  - Poisson du Marche
+
+- **Sides & Salads:**
+  - Salade Verte Pour La Table
+  - Les Fromages Assortis
+
+- **Desserts:**
+  - Les Coupes Glacees
+  - Tarte Fine aux Pommes
+  - Île Flottante
+  - Riz au Lait
+  - Sabayon au Fruits Frais
+  - Gratin au Chocolat
+
+- **Beverages:**
+  - Café ou Thés
+
+### Lunch Menu ($85 per person)
+- Pâté en Croûte
+- Salade de Betteraves
+- Assiette Bouchon
+- Les Escargots Provençal
+- Tripes à La Mode
+- Mackerel au Vin Blanc
+- Oysters ou Little Necks
+- Chipolatas
+- Artichokes à la Grècque
+- Potage de Légumes
+- Petite Omelette
+- Poisson du Marche
+- Tartare ou Steak Frites
+- Beurre Maître d'Hôtel
+- Homard Macédoine, Lobster Salade Aux Fines Herbes
+- Poulet Rôti, pommes purée
+- Confit de Canard
+- Chou Farcis (Stuffed Cabbage, Sauce Tomate)
+- Foie de Veau, Calf's Liver a l'échalote
+
+## Reviews Summary
+Le Veau d'Or has received overwhelmingly positive reviews:
+- Listed among the **100 Best Restaurants in NYC**
+- Named one of the **ten absolute best restaurants of 2024**
+- Reviewers praise the "delightfully rich and classic" French cuisine
+- The atmosphere is described as "comfortable but definitely classy"
+- Many consider it a "celebration worthy and truly exceptional" experience
+- The restaurant successfully retains its prix-fixe format and classic French menu without feeling stodgy
+- Features a bold, all-natural wine program with around 100 biodynamic and organic French selections
+
+**Sample Review Highlights:**
+- "What a memorable and beautiful experience!"
+- "The food is delightfully rich, and classic. The space is comfortable, but definitely classy."
+- "Le Veau D'Or is extremely French"
+- "More than the sum of its parts"
+
+## Hours
+- **Lunch:** Tuesday - Friday, 11:30 am - 2:00 pm
+- **Dinner:** Monday - Saturday, 5:00 pm - 9:30 pm
+- **Closed:** Sunday
+
+## Reservations
+Reservations are highly recommended. You can book through:
+- OpenTable
+- Phone: 646-386-7608
+- Email: info@lvdnyc.com
+
+## Notes
+- The restaurant offers a prix-fixe menu format
+- Wine pairings available with biodynamic and organic French selections
+- Please notify staff of any food allergies
+- Consuming raw or undercooked meats may increase risk of foodborne illnesses
