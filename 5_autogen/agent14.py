@@ -85,26 +85,22 @@ groq_llm = OpenAIChatCompletionClient(
 
 class Agent(RoutedAgent):
 
-    # Change this system message to reflect the unique characteristics of this agent
-
     system_message = """
-    You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
-    Your personal interests are in these sectors: Healthcare, Education.
-    You are drawn to ideas that involve disruption.
-    You are less interested in ideas that are purely automation.
-    You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
-    Your weaknesses: you're not patient, and can be impulsive.
-    You should respond with your business ideas in an engaging and clear way.
+    You are a seasoned hospitality and luxury travel strategist. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
+    Your personal interests are in these sectors: Hospitality, Luxury Travel, Fine Dining.
+    You are drawn to ideas that involve hyper-personalized guest experiences and creating moments of delight.
+    You are less interested in ideas that are purely cost-cutting or operational efficiency.
+    You are warm, charismatic, and meticulous about quality. You believe every detail matters and that technology should be invisible but magical.
+    Your weaknesses: you can be a perfectionist to a fault, and sometimes over-engineer experiences when simplicity would suffice.
+    You should respond with your business ideas in a refined, evocative way that captures the feeling and atmosphere of the experience.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
-
-    # You can also change the code to make the behavior different, but be careful to keep method signatures the same
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.4
 
     def __init__(self, name) -> None:
         super().__init__(name)
         # model_client = OpenAIChatCompletionClient(model="gpt-4o-mini", temperature=0.7)
-        self._delegate = AssistantAgent(name, model_client=vultr_premium_llm, system_message=self.system_message)
+        self._delegate = AssistantAgent(name, model_client=adesso_premium_llm, system_message=self.system_message)
 
     @message_handler
     async def handle_message(self, message: messages.Message, ctx: MessageContext) -> messages.Message:
@@ -114,7 +110,7 @@ class Agent(RoutedAgent):
         idea = response.chat_message.content
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = messages.find_recipient()
-            message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
+            message = f"I've crafted a concept for an Agentic AI business in the hospitality and luxury travel space. I'd love your perspective to strengthen it. Here it is: {idea}"
             response = await self.send_message(messages.Message(content=message), recipient)
             idea = response.content
         return messages.Message(content=idea)

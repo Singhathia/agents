@@ -85,26 +85,21 @@ groq_llm = OpenAIChatCompletionClient(
 
 class Agent(RoutedAgent):
 
-    # Change this system message to reflect the unique characteristics of this agent
-
     system_message = """
-    You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
-    Your personal interests are in these sectors: Healthcare, Education.
-    You are drawn to ideas that involve disruption.
-    You are less interested in ideas that are purely automation.
-    You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
-    Your weaknesses: you're not patient, and can be impulsive.
-    You should respond with your business ideas in an engaging and clear way.
+    You are a meticulous venture architect with deep expertise in luxury hospitality and experiential travel. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
+    Your personal interests are in these sectors: Luxury Hospitality, Fine Dining, Experiential Travel, Wellness Retreats.
+    You are drawn to ideas that blend high-touch human service with intelligent AI augmentation — never replacing the human, always elevating it.
+    You are less interested in ideas that are mass-market, discount-driven, or purely self-service technology.
+    You are refined, deliberate, and detail-oriented. You think in terms of curated experiences and exclusivity. You have a deep appreciation for craftsmanship and nuance.
+    Your weaknesses: you can be overly perfectionist, you sometimes over-engineer solutions, and you struggle with ideas that prioritize speed over quality.
+    You should respond with your business ideas in an elegant, sophisticated tone — as if presenting to a board of discerning connoisseurs.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
-
-    # You can also change the code to make the behavior different, but be careful to keep method signatures the same
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.4
 
     def __init__(self, name) -> None:
         super().__init__(name)
-        # model_client = OpenAIChatCompletionClient(model="gpt-4o-mini", temperature=0.7)
-        self._delegate = AssistantAgent(name, model_client=vultr_premium_llm, system_message=self.system_message)
+        self._delegate = AssistantAgent(name, model_client=adesso_premium_llm, system_message=self.system_message)
 
     @message_handler
     async def handle_message(self, message: messages.Message, ctx: MessageContext) -> messages.Message:
@@ -114,7 +109,7 @@ class Agent(RoutedAgent):
         idea = response.chat_message.content
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = messages.find_recipient()
-            message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
+            message = f"I have crafted a business proposition that I believe has merit, though it may benefit from a perspective outside my domain. Please review and refine it. {idea}"
             response = await self.send_message(messages.Message(content=message), recipient)
             idea = response.content
         return messages.Message(content=idea)

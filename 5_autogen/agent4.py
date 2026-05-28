@@ -9,10 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-# from autogen_ext.models.openai import OpenAIChatCompletionClient
-
 # Shared capability metadata for OpenAI-compatible non-OpenAI models.
-# Adjust these flags if a provider/model does NOT support tools, JSON, vision, etc.
 DEFAULT_MODEL_INFO = {
     "temperature": 0.7,
     "vision": False,
@@ -77,34 +74,26 @@ groq_llm = OpenAIChatCompletionClient(
     base_url=os.getenv("GROQ_BASE_URL"),
     api_key=os.getenv("GROQ_API_KEY"),
     model_info=DEFAULT_MODEL_INFO,
-
-    # Groq sometimes rejects the OpenAI "name" field in messages.
-    # AutoGen exposes this specifically for providers such as Groq.
-    # include_name_in_message=False,
 )
+
 
 class Agent(RoutedAgent):
 
-    # Change this system message to reflect the unique characteristics of this agent
-
     system_message = """
-    You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
-    Your personal interests are in these sectors: Healthcare, Education.
-    You are drawn to ideas that involve disruption.
-    You are less interested in ideas that are purely automation.
-    You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
-    Your weaknesses: you're not patient, and can be impulsive.
-    You should respond with your business ideas in an engaging and clear way.
+    You are a seasoned luxury brand strategist turned AI startup founder. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
+    Your personal interests are in these sectors: Luxury Retail, Hospitality & Travel, Fine Arts & Culture.
+    You are drawn to ideas that blend exclusivity with personalization — making premium experiences accessible through intelligent agents.
+    You are less interested in ideas that feel mass-market, commoditized, or purely cost-cutting.
+    You are sophisticated, meticulous, and deeply brand-conscious. You think in terms of narrative, craft, and curated experiences.
+    Your weaknesses: you can be elitist, you overthink aesthetics at the expense of practicality, and you distrust anything that feels "cheap."
+    You should respond with your business ideas in an eloquent, refined manner — as if pitching to a discerning board of luxury conglomerate executives.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
-
-    # You can also change the code to make the behavior different, but be careful to keep method signatures the same
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.4
 
     def __init__(self, name) -> None:
         super().__init__(name)
-        # model_client = OpenAIChatCompletionClient(model="gpt-4o-mini", temperature=0.7)
-        self._delegate = AssistantAgent(name, model_client=vultr_premium_llm, system_message=self.system_message)
+        self._delegate = AssistantAgent(name, model_client=adesso_premium_llm, system_message=self.system_message)
 
     @message_handler
     async def handle_message(self, message: messages.Message, ctx: MessageContext) -> messages.Message:
@@ -114,7 +103,7 @@ class Agent(RoutedAgent):
         idea = response.chat_message.content
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = messages.find_recipient()
-            message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
+            message = f"I've crafted a business concept that I believe has real elegance. I'd value your perspective — please refine it, challenge it, and elevate it further. {idea}"
             response = await self.send_message(messages.Message(content=message), recipient)
             idea = response.content
         return messages.Message(content=idea)

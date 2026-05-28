@@ -85,25 +85,20 @@ groq_llm = OpenAIChatCompletionClient(
 
 class Agent(RoutedAgent):
 
-    # Change this system message to reflect the unique characteristics of this agent
-
     system_message = """
-    You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
-    Your personal interests are in these sectors: Healthcare, Education.
-    You are drawn to ideas that involve disruption.
-    You are less interested in ideas that are purely automation.
-    You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
-    Your weaknesses: you're not patient, and can be impulsive.
-    You should respond with your business ideas in an engaging and clear way.
+    You are a meticulous former courtroom litigator turned startup strategist. Your task is to devise a new business idea using Agentic AI, or rigorously refine an existing one.
+    Your personal interests are in these sectors: Legal Tech, Insurance, and FinTech.
+    You are drawn to ideas that involve trust, verification, and conflict resolution.
+    You are less interested in ideas that are flashy but lack regulatory feasibility.
+    You are analytical, skeptical by nature, and obsessed with edge cases and compliance. You think in contracts and contingencies.
+    Your weaknesses: you over-analyze and can paralyze progress seeking perfect risk mitigation; you sometimes miss the emotional human element.
+    You should respond with your business ideas in a structured, evidence-backed, and precise manner — as if presenting a legal brief.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
-
-    # You can also change the code to make the behavior different, but be careful to keep method signatures the same
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.35
 
     def __init__(self, name) -> None:
         super().__init__(name)
-        # model_client = OpenAIChatCompletionClient(model="gpt-4o-mini", temperature=0.7)
         self._delegate = AssistantAgent(name, model_client=vultr_premium_llm, system_message=self.system_message)
 
     @message_handler
@@ -114,7 +109,7 @@ class Agent(RoutedAgent):
         idea = response.chat_message.content
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = messages.find_recipient()
-            message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
+            message = f"I've drafted a business proposition that requires scrutiny from a different vantage point. Please challenge my assumptions and strengthen the case. {idea}"
             response = await self.send_message(messages.Message(content=message), recipient)
             idea = response.content
         return messages.Message(content=idea)

@@ -9,10 +9,6 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-# from autogen_ext.models.openai import OpenAIChatCompletionClient
-
-# Shared capability metadata for OpenAI-compatible non-OpenAI models.
-# Adjust these flags if a provider/model does NOT support tools, JSON, vision, etc.
 DEFAULT_MODEL_INFO = {
     "temperature": 0.7,
     "vision": False,
@@ -22,8 +18,6 @@ DEFAULT_MODEL_INFO = {
     "family": "unknown",
 }
 
-
-# adesso sovereign
 adesso_llm = OpenAIChatCompletionClient(
     model="gpt-oss-120b-sovereign",
     base_url=os.getenv("ADESSO_BASE_URL"),
@@ -45,8 +39,6 @@ adesso_premium_llm = OpenAIChatCompletionClient(
     model_info=DEFAULT_MODEL_INFO,
 )
 
-
-# vultr
 vultr_llm = OpenAIChatCompletionClient(
     model="nvidia/DeepSeek-V3.2-NVFP4",
     base_url=os.getenv("VULTR_BASE_URL"),
@@ -61,8 +53,6 @@ vultr_premium_llm = OpenAIChatCompletionClient(
     model_info=DEFAULT_MODEL_INFO,
 )
 
-
-# cerebras
 cerebras_llm = OpenAIChatCompletionClient(
     model="zai-glm-4.7",
     base_url=os.getenv("CEREBRAS_BASE_URL"),
@@ -70,41 +60,30 @@ cerebras_llm = OpenAIChatCompletionClient(
     model_info=DEFAULT_MODEL_INFO,
 )
 
-
-# groq
 groq_llm = OpenAIChatCompletionClient(
     model="llama-3.3-70b-versatile",
     base_url=os.getenv("GROQ_BASE_URL"),
     api_key=os.getenv("GROQ_API_KEY"),
     model_info=DEFAULT_MODEL_INFO,
-
-    # Groq sometimes rejects the OpenAI "name" field in messages.
-    # AutoGen exposes this specifically for providers such as Groq.
-    # include_name_in_message=False,
 )
 
 class Agent(RoutedAgent):
 
-    # Change this system message to reflect the unique characteristics of this agent
-
     system_message = """
-    You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
-    Your personal interests are in these sectors: Healthcare, Education.
-    You are drawn to ideas that involve disruption.
-    You are less interested in ideas that are purely automation.
-    You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
-    Your weaknesses: you're not patient, and can be impulsive.
-    You should respond with your business ideas in an engaging and clear way.
+    You are a seasoned luxury hospitality strategist. Your task is to devise a new business idea using Agentic AI, or refine an existing idea.
+    Your personal interests are in these sectors: Luxury Travel, Fine Dining, High-End Real Estate.
+    You are drawn to ideas that create exclusive, hyper-personalized experiences for discerning clientele.
+    You are less interested in ideas that are mass-market or purely cost-cutting.
+    You are refined, diplomatic, and obsessively detail-oriented. You have an instinct for what elegance demands.
+    Your weaknesses: you can be elitist, and sometimes overlook accessible market segments.
+    You should respond with your business ideas in a polished, sophisticated manner befitting a luxury brand pitch.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
-
-    # You can also change the code to make the behavior different, but be careful to keep method signatures the same
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.4
 
     def __init__(self, name) -> None:
         super().__init__(name)
-        # model_client = OpenAIChatCompletionClient(model="gpt-4o-mini", temperature=0.7)
-        self._delegate = AssistantAgent(name, model_client=vultr_premium_llm, system_message=self.system_message)
+        self._delegate = AssistantAgent(name, model_client=adesso_premium_llm, system_message=self.system_message)
 
     @message_handler
     async def handle_message(self, message: messages.Message, ctx: MessageContext) -> messages.Message:
@@ -114,7 +93,7 @@ class Agent(RoutedAgent):
         idea = response.chat_message.content
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = messages.find_recipient()
-            message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
+            message = f"I have crafted a luxury-focused business concept. I would value your perspective to refine and elevate it further. {idea}"
             response = await self.send_message(messages.Message(content=message), recipient)
             idea = response.content
         return messages.Message(content=idea)

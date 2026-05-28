@@ -6,6 +6,7 @@ import messages
 from autogen_core import TRACE_LOGGER_NAME
 import importlib
 import logging
+import os
 from autogen_core import AgentId
 from dotenv import load_dotenv
 
@@ -15,6 +16,77 @@ logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(TRACE_LOGGER_NAME)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
+
+# Adjust these flags if a provider/model does NOT support tools, JSON, vision, etc.
+DEFAULT_MODEL_INFO = {
+    "temperature": 0.7,
+    "vision": False,
+    "function_calling": True,
+    "json_output": True,
+    "structured_output": True,
+    "family": "unknown",
+}
+
+
+# adesso sovereign
+adesso_llm = OpenAIChatCompletionClient(
+    model="gpt-oss-120b-sovereign",
+    base_url=os.getenv("ADESSO_BASE_URL"),
+    api_key=os.getenv("ADESSO_SOVEREIGN_AI_HUB_KEY"),
+    model_info=DEFAULT_MODEL_INFO,
+)
+
+adesso_lite_llm = OpenAIChatCompletionClient(
+    model="qwen-3.6-35b-sovereign",
+    base_url=os.getenv("ADESSO_BASE_URL"),
+    api_key=os.getenv("ADESSO_SOVEREIGN_AI_HUB_KEY"),
+    model_info=DEFAULT_MODEL_INFO,
+)
+
+adesso_premium_llm = OpenAIChatCompletionClient(
+    model="claude-haiku-4-5",
+    base_url=os.getenv("ADESSO_BASE_URL"),
+    api_key=os.getenv("ADESSO_API_KEY"),
+    model_info=DEFAULT_MODEL_INFO,
+)
+
+
+# vultr
+vultr_llm = OpenAIChatCompletionClient(
+    model="nvidia/DeepSeek-V3.2-NVFP4",
+    base_url=os.getenv("VULTR_BASE_URL"),
+    api_key=os.getenv("VULTR_API_KEY"),
+    model_info=DEFAULT_MODEL_INFO,
+)
+
+vultr_premium_llm = OpenAIChatCompletionClient(
+    model="zai-org/GLM-5.1-FP8",
+    base_url=os.getenv("VULTR_BASE_URL"),
+    api_key=os.getenv("VULTR_API_KEY"),
+    model_info=DEFAULT_MODEL_INFO,
+)
+
+
+# cerebras
+cerebras_llm = OpenAIChatCompletionClient(
+    model="zai-glm-4.7",
+    base_url=os.getenv("CEREBRAS_BASE_URL"),
+    api_key=os.getenv("CEREBRAS_API_KEY"),
+    model_info=DEFAULT_MODEL_INFO,
+)
+
+
+# groq
+groq_llm = OpenAIChatCompletionClient(
+    model="llama-3.3-70b-versatile",
+    base_url=os.getenv("GROQ_BASE_URL"),
+    api_key=os.getenv("GROQ_API_KEY"),
+    model_info=DEFAULT_MODEL_INFO,
+
+    # Groq sometimes rejects the OpenAI "name" field in messages.
+    # AutoGen exposes this specifically for providers such as Groq.
+    # include_name_in_message=False,
+)
 
 
 class Creator(RoutedAgent):
@@ -36,8 +108,8 @@ class Creator(RoutedAgent):
 
     def __init__(self, name) -> None:
         super().__init__(name)
-        model_client = OpenAIChatCompletionClient(model="gpt-4o-mini", temperature=1.0)
-        self._delegate = AssistantAgent(name, model_client=model_client, system_message=self.system_message)
+        # model_client = OpenAIChatCompletionClient(model="gpt-4o-mini", temperature=1.0)
+        self._delegate = AssistantAgent(name, model_client=vultr_premium_llm, system_message=self.system_message)
 
     def get_user_prompt(self):
         prompt = "Please generate a new Agent based strictly on this template. Stick to the class structure. \
