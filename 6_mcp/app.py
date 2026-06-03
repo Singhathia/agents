@@ -146,7 +146,7 @@ class TraderView:
             show_progress="hidden",
             queue=False,
         )
-        log_timer = gr.Timer(value=0.5)
+        log_timer = gr.Timer(value=5)
         log_timer.tick(
             fn=self.trader.get_logs,
             inputs=[self.log],
@@ -187,4 +187,4 @@ def create_ui():
 
 if __name__ == "__main__":
     ui = create_ui()
-    ui.launch(inbrowser=True)
+    ui.launch(inbrowser=True, share=True)
